@@ -1,0 +1,85 @@
+/*Powered By: Manaknightdigital Inc. https://manaknightdigital.com/ Year: 2021*/
+/**
+ * user Model
+ * @copyright 2021 Manaknightdigital Inc.
+ * @link https://manaknightdigital.com
+ * @license Proprietary Software licensing
+ * @author Ryan Wong
+ *
+ */
+
+const moment = require("moment");
+const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize");
+const { intersection } = require("lodash");
+const coreModel = require("./../core/models");
+
+module.exports = (sequelize, DataTypes) => {
+  const Termination = sequelize.define(
+    "termination",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      message: DataTypes.TEXT,
+      counter: DataTypes.INTEGER,
+      created_at: DataTypes.DATEONLY,
+      updated_at: DataTypes.DATE
+    },
+    {
+      timestamps: true,
+      freezeTableName: true,
+      tableName: "termination",
+    },
+    {
+      underscoredAll: false,
+      underscored: false,
+    }
+    );
+    coreModel.call(this, Termination);
+
+    Termination._preCreateProcessing = function (data) {
+      return data;
+    };
+    Termination._postCreateProcessing = function (data) {
+      return data;
+    };
+    Termination._customCountingConditions = function (data) {
+      return data;
+    };
+    Termination._filterAllowKeys = function (data) {
+      let cleanData = {};
+      let allowedFields = Termination.allowFields();
+      allowedFields.push(Termination._primaryKey());
+
+      for (const key in data) {
+        if (allowedFields.includes(key)) {
+          cleanData[key] = data[key];
+        }
+      }
+      return cleanData;
+    };
+
+    Termination.timeDefaultMapping = function () {
+      let results = [];
+      for (let i = 0; i < 24; i++) {
+        for (let j = 0; j < 60; j++) {
+          let hour = i < 10 ? "0".i : i;
+          let min = j < 10 ? "0".j : j;
+          results[i * 60 + j] = `${hour}:${min}`;
+        }
+      }
+      return results;
+    };
+    Termination.allowFields = function () {
+      return ["id", "message", "counter"];
+    };
+
+    Termination.labels = function () {
+      return ["ID", "Message", "Counter"];
+    };
+
+    return Termination;
+};
